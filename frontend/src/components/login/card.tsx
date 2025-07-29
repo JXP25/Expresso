@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "./logo";
-import { Input, Button, Divider } from "@nextui-org/react";
+import { Input, Button, Divider, Spinner } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
 import { EyeFilledIcon } from "./EyeFilledIcon";
@@ -38,8 +38,8 @@ export const GoogleAuthButton = () => {
           width={50}
           height={50}
         />
-       <span className=" text-[1.4rem] -translate-y-1">&#124;</span>
-       Login With google
+        <span className=" text-[1.4rem] -translate-y-1">&#124;</span>
+        Login With google
       </button>
     </Link>
   );
@@ -49,25 +49,31 @@ export default function Card() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [password, setPassword] = React.useState("");
   const [username, setusername] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const router = useRouter();
 
-  const onSubmit = () => {
-    const s1 = async () => {
+  const onSubmit = async () => {
+    if (isLoading) return; // Prevent multiple clicks
+
+    setIsLoading(true);
+    try {
       const res = await login({ username: username, password: password });
       if (res) {
-        toast.success("Logged in SuccessFully");
+        toast.success("Logged in Successfully");
         router.push("/dashboard");
       } else {
         toast.error("Email or password wrong");
       }
-    };
-    s1();
+    } catch (error) {
+      toast.error("Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isInvalid = React.useMemo(() => {
     if (username === "") return false;
-
     return true;
   }, [username]);
 
@@ -79,8 +85,8 @@ export default function Card() {
           className="h-[60px] bg-customblue-600"
           orientation="vertical"
         />
-        
-          <Image src="/data/logos/google.png" alt="G" width={60} height={60} />
+
+        <Image src="/data/logos/google.png" alt="G" width={60} height={60} />
       </div>
 
       <div className="w-[18rem] flex flex-col gap-[1.5rem] justify-center items-center">
@@ -94,9 +100,10 @@ export default function Card() {
           className="max-w-[25rem] dark"
           color="primary"
           errorMessage="Please enter a valid username"
+          isDisabled={isLoading}
         />
         <Input
-          isDisabled={!isInvalid}
+          isDisabled={!isInvalid || isLoading}
           color="primary"
           label="Password"
           value={password}
@@ -106,6 +113,7 @@ export default function Card() {
               className="focus:outline-none"
               type="button"
               onClick={toggleVisibility}
+              disabled={isLoading}
             >
               {isVisible ? (
                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
@@ -127,17 +135,19 @@ export default function Card() {
       </div>
 
       <Button
-        isDisabled={password === "" ? true : false}
+        isDisabled={password === "" || isLoading}
         color="primary"
         variant="ghost"
         fullWidth={true}
         onClick={onSubmit}
         size="lg"
+        isLoading={isLoading}
+        spinner={<Spinner color="white" size="sm" />}
       >
-        Login
+        {isLoading ? "Logging in..." : "Login"}
       </Button>
       <div className="w-[100%]">
-      <GoogleAuthButton />
+        <GoogleAuthButton />
       </div>
     </div>
   );

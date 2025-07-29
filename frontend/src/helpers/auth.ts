@@ -94,7 +94,28 @@ export async function register(data: RegisterPostData) {
     },
     body: JSON.stringify(data),
   });
-  return response.ok;
+  
+  if (response.ok) {
+    // After successful registration, automatically log in the user
+    const loginResponse = await fetch(`${BASE_URL}/token/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: data.username,
+        password: data.password1,
+      }),
+    });
+    
+    if (loginResponse.ok) {
+      const loginData = await loginResponse.json();
+      setCookie("accessToken", loginData.access, { maxAge: 30 * 24 * 60 * 60 });
+      return { success: true, autoLogin: true };
+    }
+  }
+  
+  return { success: response.ok, autoLogin: false };
 }
 
 export async function getChannelsUUID() {

@@ -1,6 +1,6 @@
 import React from "react";
 import Logo from "./logo";
-import { Input, Button, Divider } from "@nextui-org/react";
+import { Input, Button, Divider, Spinner } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
 import { EyeFilledIcon } from "./EyeFilledIcon";
@@ -16,24 +16,36 @@ export default function Card() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmpassword, setConfirmPassword] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
 
-  const onSubmit = () => {
-    const res1 = async () => {
+  const onSubmit = async () => {
+    if (isLoading) return; // Prevent multiple clicks
+
+    setIsLoading(true);
+    try {
       const res = await register({
         username: username,
         email: email,
         password1: password,
         password2: confirmpassword,
       });
-      if (res) {
-        toast.success("Account Created Successfully");
-        router.push("/login");
+      if (res.success) {
+        if (res.autoLogin) {
+          toast.success("Account Created Successfully! Welcome!");
+          router.push("/dashboard"); // Go directly to dashboard
+        } else {
+          toast.success("Account Created Successfully! Please login.");
+          router.push("/login");
+        }
       } else {
         toast.error("Something went wrong");
       }
-    };
-    res1();
+    } catch (error) {
+      toast.error("Registration failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const validateEmail = (email: any) =>
@@ -79,9 +91,8 @@ export default function Card() {
           className="h-[60px] bg-customorange-400"
           orientation="vertical"
         />
-        
-          <Image src="/data/logos/google.png" alt="G" width={60} height={60} />
-        
+
+        <Image src="/data/logos/google.png" alt="G" width={60} height={60} />
       </div>
 
       <div className="w-[20rem] flex flex-col gap-[1.5rem] justify-center items-center">
@@ -98,9 +109,10 @@ export default function Card() {
           className="max-w-[25rem] dark"
           value={username}
           onValueChange={setUsername}
+          isDisabled={isLoading}
         />
         <Input
-          isDisabled={username === "" ? true : false}
+          isDisabled={username === "" ? true : false || isLoading}
           isClearable
           isRequired
           type="email"
@@ -114,7 +126,9 @@ export default function Card() {
           onValueChange={setEmail}
         />
         <Input
-          isDisabled={isInvalid ? true : email === "" ? true : false}
+          isDisabled={
+            isInvalid ? true : email === "" ? true : false || isLoading
+          }
           isClearable
           type="password"
           label="Password"
@@ -129,7 +143,9 @@ export default function Card() {
         <Input
           value={confirmpassword}
           onValueChange={setConfirmPassword}
-          isDisabled={isPassInvalid ? true : password === "" ? true : false}
+          isDisabled={
+            isPassInvalid ? true : password === "" ? true : false || isLoading
+          }
           isRequired
           label="Confirm Password"
           isInvalid={isConfirmPassInvalid}
@@ -141,6 +157,7 @@ export default function Card() {
               className="focus:outline-none"
               type="button"
               onClick={toggleVisibility}
+              disabled={isLoading}
             >
               {isVisible ? (
                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
@@ -162,17 +179,23 @@ export default function Card() {
 
       <Button
         isDisabled={
-          isConfirmPassInvalid ? true : confirmpassword === "" ? true : false
+          isConfirmPassInvalid
+            ? true
+            : confirmpassword === ""
+            ? true
+            : false || isLoading
         }
         color="warning"
         variant="ghost"
         fullWidth={true}
         onClick={onSubmit}
+        isLoading={isLoading}
+        spinner={<Spinner color="white" size="sm" />}
       >
-        Sign In
+        {isLoading ? "Creating Account..." : "Sign In"}
       </Button>
       <div className=" w-[100%]">
-      <GoogleAuthButton />
+        <GoogleAuthButton />
       </div>
     </div>
   );

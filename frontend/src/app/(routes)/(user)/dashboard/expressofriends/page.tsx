@@ -60,7 +60,7 @@ export default function Dashboard() {
     }
     loadSelfDetails();
 
-  }, [selfDetails]);
+  }, []);
   if (loading) {
     return (
       <>

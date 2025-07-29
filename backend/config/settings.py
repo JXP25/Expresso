@@ -22,17 +22,17 @@ env = environ.Env(
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-STATIC_ROOT = BASE_DIR.joinpath('static')
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 STATICFILES_DIRS = []
 
 SECRET_KEY = env.get_value("SECRET_KEY", default='django-insecure-(3!q3dsh&3)4opq32m-c(ks!qzacg^oufdk0rz)1)%$c^^-#sh')
 DEBUG = env.get_value("DEBUG", default=True)
-HOST = env.get_value("HOST", default="127.0.0.1")
-FRONTEND_URL = env.get_value("FRONTEND_URL")
 
-ALLOWED_HOSTS = [HOST]
+HOST = env.get_value("HOST", default="127.0.0.1")
+HOST_LIST = [h.strip() for h in HOST.split(",") if h.strip()]
+FRONTEND_URL = env.get_value("FRONTEND_URL")
+ALLOWED_HOSTS = HOST_LIST
 
 # REST framework
 REST_FRAMEWORK = {
@@ -164,7 +164,14 @@ REST_USE_JWT = True
 CORS_ALLOW_ALL_ORIGINS = True  
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', f'https://{HOST}', f'http://{HOST}']
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.127.0.0.1",
+]
+
+for h in HOST_LIST:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{h}")
+    CSRF_TRUSTED_ORIGINS.append(f"http://{h}")
+
 
 CORS_ALLOW_HEADERS = (
     "accept",
@@ -263,7 +270,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Static files directories
+STATICFILES_DIRS = []
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

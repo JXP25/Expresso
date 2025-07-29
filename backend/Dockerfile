@@ -8,6 +8,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . /backend/
 
-EXPOSE 8000
+EXPOSE 4002
 
 CMD python manage.py runserver

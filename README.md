@@ -95,8 +95,6 @@ open another vs code terminal
 
 and run localhost
 
-For deployment and production, refer to - https://github.com/Princekumarofficial/expresso-production - latest version of this repo
-
 Color Pallette for VC-
 #1E2640
 #DC9750
