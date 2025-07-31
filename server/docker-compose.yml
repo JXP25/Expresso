@@ -1,6 +1,7 @@
 services:
   expresso-mediasoup-server:
     build: .
+    container_name: expresso-mediasoup-server
     ports:
       - "4003:4444"
       - "10000-10100:10000-10100/udp"
@@ -8,3 +9,10 @@ services:
     env_file:
       - ./.env
     restart: unless-stopped
+    networks:
+      - expresso_sfu_network
+
+networks:
+  expresso_sfu_network:
+    driver: bridge
+    name: expresso_sfu_network
