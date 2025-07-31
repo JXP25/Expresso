@@ -147,6 +147,16 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env.get_value('GOOGLE_OAUTH2_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env.get_value('GOOGLE_OAUTH2_CLIENT_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['profile', 'email']
 
+# Social Auth Settings
+SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
+    'access_type': 'offline',
+    'prompt': 'consent'
+}
+
+# Rest Social Auth Settings
+REST_SOCIAL_OAUTH2_REDIRECT_URI = '/google'
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = '/google'
+
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": [
