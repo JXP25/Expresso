@@ -51,23 +51,27 @@ export async function login(data: LoginPostData) {
 }
 
 export const loginWithGoogle = async (code: string) => {
-  const tokens = await apiCall(`/social/jwtsocial/jwt-pair-user`, {
-    method: "POST",
-    body: {
-      provider: "google-oauth2",
-      code,
-      redirect_uri: `${NEXT_PUBLIC_FRONTEND_URL}/google`,
-    },
-    isAuth: false,
-  });
-  console.log(tokens);
-  console.log({
-    provider: "google-oauth2",
-    code,
-    redirect_uri: `${NEXT_PUBLIC_FRONTEND_URL}/google`,
-  });
-  setCookie("accessToken", tokens.token, { maxAge: 30 * 24 * 60 * 60 });
-  return tokens;
+  try {
+    const tokens = await apiCall(`/social/jwtsocial/jwt-pair-user`, {
+      method: "POST",
+      body: {
+        provider: "google-oauth2",
+        code,
+        redirect_uri: `${NEXT_PUBLIC_FRONTEND_URL}/google`,
+      },
+      isAuth: false,
+    });
+
+    if (tokens && tokens.token) {
+      setCookie("accessToken", tokens.token, { maxAge: 30 * 24 * 60 * 60 });
+      return tokens;
+    } else {
+      throw new Error("Invalid response from server");
+    }
+  } catch (error) {
+    console.error("Google OAuth error:", error);
+    throw error;
+  }
 };
 
 export async function logOut() {
@@ -94,7 +98,7 @@ export async function register(data: RegisterPostData) {
     },
     body: JSON.stringify(data),
   });
-  
+
   if (response.ok) {
     // After successful registration, automatically log in the user
     const loginResponse = await fetch(`${BASE_URL}/token/`, {
@@ -107,14 +111,14 @@ export async function register(data: RegisterPostData) {
         password: data.password1,
       }),
     });
-    
+
     if (loginResponse.ok) {
       const loginData = await loginResponse.json();
       setCookie("accessToken", loginData.access, { maxAge: 30 * 24 * 60 * 60 });
       return { success: true, autoLogin: true };
     }
   }
-  
+
   return { success: response.ok, autoLogin: false };
 }
 
