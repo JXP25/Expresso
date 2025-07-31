@@ -1,4 +1,4 @@
-import { UserEmotion } from "@/components/VideoCallV1/types";
+import { UserEmotion } from "@/components/VideoCall/types";
 import { getChannelsUUID } from "@/helpers/auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_WS_URL;

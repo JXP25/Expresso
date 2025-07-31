@@ -1,0 +1,36 @@
+
+services:
+  coturn:
+    image: coturn/coturn:4.6.2
+    container_name: expresso-coturn
+    restart: unless-stopped
+
+    # <-- POINT HERE to your .env in this folder
+    env_file:
+      - ./.env
+
+    network_mode: host
+
+    volumes:
+      # mount cert.pem → server.crt
+      - ./certs/cert.pem:/etc/coturn/server.crt:ro
+      # mount privkey.pem → server.key
+      - ./certs/privkey.pem:/etc/coturn/server.key:ro
+
+    command:
+      - turnserver
+      - --no-cli
+      - --realm=${TURN_REALM}
+      - --listening-port=3478
+      - --tls-listening-port=5349
+      - --listening-ip=0.0.0.0
+      - --external-ip=${EXTERNAL_IP}/${PRIVATE_IP}
+      - --min-port=49152
+      - --max-port=65535
+      - --lt-cred-mech
+      - --user=${TURN_USERNAME}:${TURN_PASSWORD}
+      - --fingerprint
+      - --verbose
+      - --cert=/etc/coturn/server.crt
+      - --pkey=/etc/coturn/server.key
+

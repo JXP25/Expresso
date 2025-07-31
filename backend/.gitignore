@@ -1,3 +1,4 @@
+staticfiles/*
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

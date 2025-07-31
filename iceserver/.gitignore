@@ -1,0 +1,5 @@
+# SSL Certificates
+certs/*
+
+# Keep README
+!certs/README.md
