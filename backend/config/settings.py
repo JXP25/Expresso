@@ -162,11 +162,14 @@ SOCIALACCOUNT_PROVIDERS = {
 REST_USE_JWT = True
 
 
-CORS_ALLOWED_ORIGINS = [
-    FRONTEND_URL.rstrip("/"),      
-    "http://localhost:3000",        
-    "http://127.0.0.1:3000",       
+FRONTEND = env.get_value("FRONTEND_URL", default="")
+FRONTEND_LIST = [f.strip().rstrip("/") for f in FRONTEND.split(",") if f.strip()]
+
+CORS_ALLOWED_ORIGINS = FRONTEND_LIST + [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
+
 
 CORS_ALLOW_CREDENTIALS = True
 
