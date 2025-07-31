@@ -147,6 +147,16 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env.get_value('GOOGLE_OAUTH2_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env.get_value('GOOGLE_OAUTH2_CLIENT_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['profile', 'email']
 
+# Social Auth Settings
+SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
+    'access_type': 'offline',
+    'prompt': 'consent'
+}
+
+# Rest Social Auth Settings
+REST_SOCIAL_OAUTH2_REDIRECT_URI = '/google'
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = '/google'
+
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "SCOPE": [
@@ -161,7 +171,16 @@ SOCIALACCOUNT_PROVIDERS = {
 
 REST_USE_JWT = True
 
-CORS_ALLOW_ALL_ORIGINS = True  
+
+FRONTEND = env.get_value("FRONTEND_URL", default="")
+FRONTEND_LIST = [f.strip().rstrip("/") for f in FRONTEND.split(",") if f.strip()]
+
+CORS_ALLOWED_ORIGINS = FRONTEND_LIST + [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [

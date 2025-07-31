@@ -13,8 +13,23 @@ import googleLogo from "@/../public/icons/google_icon.svg";
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 const REDIRECT_URI = `${NEXT_PUBLIC_FRONTEND_URL}/google`;
 
+// Generate random state for CSRF protection
+const generateRandomState = () => {
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
+};
+
 export const GoogleAuthButton = () => {
   const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+  const state = generateRandomState();
+
+  // Store state in sessionStorage for validation
+  React.useEffect(() => {
+    sessionStorage.setItem("google_oauth_state", state);
+  }, [state]);
+
   const options = {
     redirect_uri: REDIRECT_URI,
     client_id: GOOGLE_CLIENT_ID,
@@ -25,6 +40,7 @@ export const GoogleAuthButton = () => {
       "https://www.googleapis.com/auth/userinfo.profile",
       "https://www.googleapis.com/auth/userinfo.email",
     ].join(" "),
+    state: state,
   };
 
   const qs = new URLSearchParams(options);

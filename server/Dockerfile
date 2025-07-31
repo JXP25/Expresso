@@ -1,5 +1,12 @@
 FROM node:21
 
+# Install Python and pip for mediasoup build
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set the working directory
 WORKDIR /server
 
