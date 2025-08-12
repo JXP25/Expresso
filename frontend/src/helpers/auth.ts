@@ -52,7 +52,7 @@ export async function login(data: LoginPostData) {
 
 export const loginWithGoogle = async (code: string) => {
   try {
-    const tokens = await apiCall(`/social/jwt/pair`, {
+    const tokens = await apiCall(`/social/jwt/social/jwt-pair`, {
       method: "POST",
       body: {
         provider: "google-oauth2",

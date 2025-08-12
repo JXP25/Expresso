@@ -15,7 +15,7 @@ urlpatterns = [
     path('api/v1/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), 
     path('auth/social/', include('allauth.socialaccount.urls')),
     path('api/v1/social/', include('social_django.urls', namespace='social')),
-    path('api/v1/social/jwt', include('rest_social_auth.urls_jwt_pair')),
+    path('api/v1/social/jwt/', include('rest_social_auth.urls_jwt_pair')),
 
     # path(r'^accounts-rest/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
 ]

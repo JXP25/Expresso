@@ -3,6 +3,8 @@ import { loginWithGoogle } from "@/helpers/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Loader from "@/components/dashboard/loading";
+import Particles from "@/components/landingpage/particle";
 
 const Google = () => {
   const router = useRouter();
@@ -88,19 +90,10 @@ const Google = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="text-center text-white">
-        <h1 className="text-2xl font-bold mb-4">Authenticating with Google</h1>
-        {isLoading ? (
-          <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-            <span className="ml-3">Processing...</span>
-          </div>
-        ) : (
-          <p>Redirecting to dashboard...</p>
-        )}
-      </div>
-    </div>
+    <>
+      <Particles />
+      <Loader />
+    </>
   );
 };
 
