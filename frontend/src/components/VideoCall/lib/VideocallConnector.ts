@@ -1,7 +1,7 @@
 import * as Mediasoup from "mediasoup-client";
 import { Transport } from "mediasoup-client/lib/types";
-import { animateUserEmotion } from "../UIcopy/Videocall";
-import { appendMessage, appendSelfMessage } from "../UIcopy/Chatbox";
+import { animateUserEmotion } from "../MeetUI/Videocall";
+import { appendMessage, appendSelfMessage } from "../MeetUI/Chatbox";
 const WebSocketBaseURL = process.env.NEXT_PUBLIC_SERVER_URL;
 const WSURL = (uuid: string, roomId: string) => {
   return `${WebSocketBaseURL}?uuid=${uuid}&roomId=${roomId}`;

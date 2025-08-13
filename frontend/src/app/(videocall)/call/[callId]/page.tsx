@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import React, { useContext, useEffect } from "react";
 
 const VideocallComponent = dynamic(
-  () => import("@/components/VideoCall/UIcopy/Videocall"),
+  () => import("@/components/VideoCall/MeetUI/Videocall"),
   {
     ssr: false,
   }

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Controlbar from "./Controlbar";
 import { VideoCallContext } from "../lib/VideocallHandler";
 import { predictEmotion, loadModels } from "../lib/emotionDetection";
-import Logo from "../../../components/logo/logo";
+import Logo from "../../logo/logo";
 import Image from "next/image";
 import Webcam from "react-webcam";
 import { Button } from "@nextui-org/react";
